@@ -79,7 +79,7 @@ timeout 3
 LOADER
 
 # 패키지 설치
-apt install -y --no-install-recommends --no-install-suggests xorg openbox lightdm lightdm-gtk-greeter xfce4-panel git nano
+apt install -y --no-install-recommends --no-install-suggests xorg openbox lightdm lightdm-gtk-greeter xfce4-panel git nano alacritty
 "
 
 echo "[5/6] root password"
