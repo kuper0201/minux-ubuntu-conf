@@ -57,7 +57,7 @@ deb-src $MIRROR $UBUNTU_VERSION-updates main restricted universe multiverse
 EOF
 
 apt update
-apt install -y linux-image-generic linux-headers-generic systemd-boot
+apt install -y libterm-readline-gnu-perl systemd-sysv linux-image-generic linux-headers-generic systemd-boot
 update-initramfs -c -k all
 bootctl install
 
@@ -77,6 +77,9 @@ cat <<LOADER > /boot/loader/loader.conf
 default ubuntu.conf
 timeout 3
 LOADER
+
+dbus-uuidgen > /etc/machine-id
+ln -fs /etc/machine-id /var/lib/dbus/machine-id
 
 # 패키지 설치
 apt install -y --no-install-recommends --no-install-suggests xorg openbox lightdm lightdm-gtk-greeter xfce4-panel git nano alacritty
