@@ -86,7 +86,25 @@ apt install -y --no-install-recommends --no-install-suggests xorg openbox lightd
 apt install -y adwaita-qt adwaita-qt6 gnome-themes-extra
 
 # 테마 설정
+cp -r dot_config /etc/skel/.config
+cp -r dot_themes /etc/skel/.themes
+cp -r wallpapers /usr/share/wallpapers
+
+TARGET_DIR="/usr/share/wallpapers"
+
+# 디렉터리 권한 설정
+chmod 755 "$TARGET_DIR"
+chown root:root "$TARGET_DIR"
+
+# 내부 파일 권한 설정
+find "$TARGET_DIR" -type f -exec chmod 644 {} \;
+find "$TARGET_DIR" -type f -exec chown root:root {} \;
+
+# 환경 변수 설정
 sed -i "$ s/$/\nQT_QPA_PLATFORMTHEME=qt5ct\nQT_STYLE_OVERRIDE=Adwaita-Dark\nGTK_THEME=Adwaita-dark/" /etc/environment
+
+# lightdm 배경화면 설정
+sed -i 's|^#background.*|background=/usr/share/wallpapers/wall_1.png|' /etc/lightdm/lightdm-gtk-greeter.conf
 "
 
 echo "[5/6] root password"
