@@ -95,6 +95,20 @@ sed -i '$ s/$/\nQT_QPA_PLATFORMTHEME=qt5ct\nQT_STYLE_OVERRIDE=Adwaita-Dark\nGTK_
 
 # lightdm 배경화면 설정
 sed -i 's|^#background.*|background=/usr/share/wallpapers/wall_1.png|' /etc/lightdm/lightdm-gtk-greeter.conf
+
+# 네트워크 설정
+cat <<EOF > /etc/netplan/01-adapter.yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth:
+      match:
+        name: "*"
+      dhcp4: true
+EOF
+
+netplan apply
 "
 
 echo "[5/6] root password"
