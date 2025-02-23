@@ -115,6 +115,13 @@ EOF
 netplan apply
 "
 
+cp -r chroot_script /mnt/root
+chroot ${TARGET_MOUNT} bash -c "
+cd /root/chroot_script
+chmod +x *.sh
+./user.sh
+"
+
 echo "[5/6] root password"
 chroot ${TARGET_MOUNT} bash -c "
 echo 'minux' > /etc/hostname
