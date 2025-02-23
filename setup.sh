@@ -1,12 +1,23 @@
 #!/bin/bash
 
+apt update
+apt install -y gdisk dialog debootstrap
+
 # 설정
-TARGET_DISK="/dev/vda"
+
+DISKS=$(lsblk -nd --output NAME | awk '{print $1 " " "/dev/"$1}')
+TARGET_DISK =$(dialog --title "Disk" --menu "Select disk for installation:" 15 50 5 $DISKS 3>&1 1>&2 2>&3)
+clear
+
+if [ -z "$TARGET_DISK" ]; then
+    echo "Cancel installation"
+    exit 1
+fi
+
+
 TARGET_MOUNT="/mnt"
 UBUNTU_VERSION="noble"  # 22.04 LTS
 MIRROR="http://mirror.kakao.com/ubuntu"
-
-apt install -y gdisk dialog
 
 echo "[1/6] disk partitioning"
 # 기존 데이터 삭제 (주의!)
@@ -28,9 +39,6 @@ mkdir -p ${TARGET_MOUNT}/boot
 mount ${TARGET_DISK}1 ${TARGET_MOUNT}/boot
 
 echo "[2/6] debootstrap"
-apt update
-apt install -y debootstrap
-
 debootstrap --arch=amd64 ${UBUNTU_VERSION} ${TARGET_MOUNT} ${MIRROR}
 
 echo "[3/6] setting fstab"
