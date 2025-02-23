@@ -68,6 +68,10 @@ bootctl install
 
 # 부팅 옵션 설정
 rm -rf /boot/loader
+rm -rf /boot/efi/loader
+
+mv /boot/initrd.img* /boot/initrd.img
+mv /boot/vmlinuz* /boot/vmlinuz
 
 mkdir -p /boot/loader/entries
 cat <<BOOT > /boot/loader/entries/ubuntu.conf
