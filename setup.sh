@@ -74,8 +74,8 @@ mv /boot/initrd.img* /boot/initrd.img
 mv /boot/vmlinuz* /boot/vmlinuz
 
 mkdir -p /boot/loader/entries
-cat <<BOOT > /boot/loader/entries/ubuntu.conf
-title Ubuntu ${UBUNTU_VERSION}
+cat <<BOOT > /boot/loader/entries/minux.conf
+title Minux(Ubuntu-${UBUNTU_VERSION})
 linux /vmlinuz
 initrd /initrd.img
 options root=UUID=$(blkid -s UUID -o value ${TARGET_DISK}2) rw quiet splash
@@ -83,7 +83,7 @@ BOOT
 
 # 부트로더 기본 설정
 cat <<LOADER > /boot/loader/loader.conf
-default ubuntu.conf
+default minux.conf
 timeout 3
 LOADER
 
@@ -115,26 +115,37 @@ EOF
 netplan apply
 "
 
-USERNAME=$(dialog --title "Add User" --inputbox "Username:" 10 40 3>&1 1>&2 2>&3)
-PASSWORD=$(dialog --title "Password Setting" --insecure --passwordbox "Password:" 10 40 3>&1 1>&2 2>&3)
+while true; do
+    ROOTPASSWORD=$(dialog --title "ROOT Password" --insecure --passwordbox "ROOT Password:" 10 40 3>&1 1>&2 2>&3)
+    if [ -z "$ROOTPASSWORD" ]; then
+        dialog --title "Error" --msgbox "Error: Empty root password. Please try again." 6 40
+    else
+        break
+    fi
+done
+
+while true; do
+    USERNAME=$(dialog --title "Add User" --inputbox "Username:" 10 40 3>&1 1>&2 2>&3)
+    if [ -z "$USERNAME" ]; then
+        dialog --title "Error" --msgbox "Error: Empty username. Please try again." 6 40
+    else
+        break
+    fi
+done
+
+while true; do
+    PASSWORD=$(dialog --title "Password Setting" --insecure --passwordbox "Password:" 10 40 3>&1 1>&2 2>&3)
+    if [ -z "$PASSWORD" ]; then
+        dialog --title "Error" --msgbox "Error: Empty password. Please try again." 6 40
+    else
+        break
+    fi
+done
+
 dialog --title "Permission" --yesno "Sudo?" 7 50
 SUDO_CHOICE=$?
 
 clear
-
-# 입력이 비어 있으면 종료
-if [ -z "$USERNAME" ]; then
-    clear
-    echo "Error: Empty username"
-    exit 1
-fi
-
-# 입력이 비어 있으면 종료
-if [ -z "$PASSWORD" ]; then
-    clear
-    echo "Error: Empty password"
-    exit 1
-fi
 
 # 4️⃣ 사용자 계정 생성
 chroot ${TARGET_MOUNT} bash -c "
@@ -149,7 +160,7 @@ fi
 echo "[5/6] root password"
 chroot ${TARGET_MOUNT} bash -c "
 echo 'minux' > /etc/hostname
-echo 'root:root' | chpasswd
+echo 'root:$ROOTPASSWORD' | chpasswd
 "
 
 echo "[6/6] installation end - reboot"
