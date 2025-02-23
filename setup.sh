@@ -115,12 +115,36 @@ EOF
 netplan apply
 "
 
-cp -r chroot_script /mnt/root
+USERNAME=$(dialog --title "Add User" --inputbox "Username:" 10 40 3>&1 1>&2 2>&3)
+PASSWORD=$(dialog --title "Password Setting" --insecure --passwordbox "Password:" 10 40 3>&1 1>&2 2>&3)
+dialog --title "Permission" --yesno "Sudo?" 7 50
+SUDO_CHOICE=$?
+
+clear
+
+# 입력이 비어 있으면 종료
+if [ -z "$USERNAME" ]; then
+    clear
+    echo "Error: Empty username"
+    exit 1
+fi
+
+# 입력이 비어 있으면 종료
+if [ -z "$PASSWORD" ]; then
+    clear
+    echo "Error: Empty password"
+    exit 1
+fi
+
+# 4️⃣ 사용자 계정 생성
 chroot ${TARGET_MOUNT} bash -c "
-cd /root/chroot_script
-chmod +x *.sh
-./user.sh
+useradd -m -s /bin/bash $USERNAME
+echo '$USERNAME:$PASSWORD' | chpasswd
 "
+
+if [ "$SUDO_CHOICE" -eq 0 ]; then
+    chroot ${TARGET_MOUNT} bash -c "usermod -aG sudo $USERNAME"
+fi
 
 echo "[5/6] root password"
 chroot ${TARGET_MOUNT} bash -c "

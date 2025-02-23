@@ -2,6 +2,11 @@
 
 # 1️⃣ 사용자명 입력 받기
 USERNAME=$(dialog --title "Add User" --inputbox "Username:" 10 40 3>&1 1>&2 2>&3)
+PASSWORD=$(dialog --title "Password Setting" --insecure --passwordbox "Password:" 10 40 3>&1 1>&2 2>&3)
+dialog --title "Permission" --yesno "Sudo?" 7 50
+SUDO_CHOICE=$?
+
+clear
 
 # 입력이 비어 있으면 종료
 if [ -z "$USERNAME" ]; then
@@ -10,21 +15,12 @@ if [ -z "$USERNAME" ]; then
     exit 1
 fi
 
-# 2️⃣ 비밀번호 입력 받기
-PASSWORD=$(dialog --title "Password Setting" --insecure --passwordbox "Password:" 10 40 3>&1 1>&2 2>&3)
-
 # 입력이 비어 있으면 종료
 if [ -z "$PASSWORD" ]; then
     clear
     echo "cancel"
     exit 1
 fi
-
-# 3️⃣ sudo 권한 여부 선택
-dialog --title "Permission" --yesno "Sudo?" 7 50
-SUDO_CHOICE=$?
-
-clear  # 다이얼로그 창 종료 후 화면 정리
 
 # 4️⃣ 사용자 계정 생성
 useradd -m -s /bin/bash "$USERNAME"
