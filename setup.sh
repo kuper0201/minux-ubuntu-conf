@@ -104,7 +104,7 @@ network:
   ethernets:
     eth:
       match:
-        name: "*"
+        name: '*'
       dhcp4: true
 EOF
 
