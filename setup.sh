@@ -90,16 +90,6 @@ ln -fs /etc/machine-id /var/lib/dbus/machine-id
 apt install -y --no-install-recommends --no-install-suggests xorg openbox lightdm lightdm-gtk-greeter xfce4-panel git nano alacritty
 apt install -y adwaita-qt adwaita-qt6 gnome-themes-extra
 
-TARGET_DIR='/usr/share/wallpapers'
-
-# 디렉터리 권한 설정
-chmod 755 $TARGET_DIR
-chown root:root $TARGET_DIR
-
-# 내부 파일 권한 설정
-find $TARGET_DIR -type f -exec chmod 644 {} \;
-find $TARGET_DIR -type f -exec chown root:root {} \;
-
 # 환경 변수 설정
 sed -i '$ s/$/\nQT_QPA_PLATFORMTHEME=qt5ct\nQT_STYLE_OVERRIDE=Adwaita-Dark\nGTK_THEME=Adwaita-dark/' /etc/environment
 
