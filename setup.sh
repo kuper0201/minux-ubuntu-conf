@@ -6,7 +6,7 @@ TARGET_MOUNT="/mnt"
 UBUNTU_VERSION="noble"  # 22.04 LTS
 MIRROR="http://mirror.kakao.com/ubuntu"
 
-apt install -y gdisk
+apt install -y gdisk dialog
 
 echo "[1/6] disk partitioning"
 # 기존 데이터 삭제 (주의!)
