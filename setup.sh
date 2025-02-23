@@ -44,6 +44,11 @@ mount --bind /dev ${TARGET_MOUNT}/dev
 mount --bind /proc ${TARGET_MOUNT}/proc
 mount --bind /sys ${TARGET_MOUNT}/sys
 
+# 테마 설정
+cp -r dot_config ${TARGET_MOUNT}/etc/skel/.config
+cp -r dot_themes ${TARGET_MOUNT}/etc/skel/.themes
+cp -r wallpapers ${TARGET_MOUNT}/usr/share/wallpapers
+
 chroot ${TARGET_MOUNT} bash -c "
 cat <<EOF > /etc/apt/sources.list
 deb $MIRROR $UBUNTU_VERSION main restricted universe multiverse
@@ -84,11 +89,6 @@ ln -fs /etc/machine-id /var/lib/dbus/machine-id
 # 패키지 설치
 apt install -y --no-install-recommends --no-install-suggests xorg openbox lightdm lightdm-gtk-greeter xfce4-panel git nano alacritty
 apt install -y adwaita-qt adwaita-qt6 gnome-themes-extra
-
-# 테마 설정
-cp -r dot_config /etc/skel/.config
-cp -r dot_themes /etc/skel/.themes
-cp -r wallpapers /usr/share/wallpapers
 
 TARGET_DIR='/usr/share/wallpapers'
 
