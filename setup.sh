@@ -3,7 +3,7 @@
 apt update
 
 DISKS=$(lsblk -nd --output NAME | awk '{print $1 " " "/dev/"$1}')
-TARGET_DISK=$(dialog --title "Disk" --menu "Select disk for installation:" 15 50 5 $DISKS 3>&1 1>&2 2>&3)
+TARGET_DISK="/dev/$(dialog --title "Disk" --menu "Select disk for installation:" 15 50 5 $DISKS 3>&1 1>&2 2>&3)"
 clear
 
 if [ -z "$TARGET_DISK" ]; then
