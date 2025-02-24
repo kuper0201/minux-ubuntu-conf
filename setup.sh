@@ -31,8 +31,8 @@ mkfs.ext4 ${TARGET_DISK}2
 
 # 마운트
 mount ${TARGET_DISK}2 ${TARGET_MOUNT}
-mkdir -p ${TARGET_MOUNT}/boot/efi
-mount ${TARGET_DISK}1 ${TARGET_MOUNT}/boot/efi
+# mkdir -p ${TARGET_MOUNT}/boot/efi
+# mount ${TARGET_DISK}1 ${TARGET_MOUNT}/boot/efi
 
 echo "[2/6] debootstrap"
 debootstrap --arch=amd64 ${UBUNTU_VERSION} ${TARGET_MOUNT} ${MIRROR}
@@ -48,8 +48,8 @@ mount --bind /dev ${TARGET_MOUNT}/dev
 mount --bind /proc ${TARGET_MOUNT}/proc
 mount --bind /sys ${TARGET_MOUNT}/sys
 if [ -d "/sys/firmware/efi" ]; then
-    mkdir -p ${TARGET_MOUNT}/boot
-    mount "$TARGET_DISK"1 "${TARGET_MOUNT}/boot"
+    mkdir -p ${TARGET_MOUNT}/boot/efi
+    mount "$TARGET_DISK"1 "${TARGET_MOUNT}/boot/efi"
 fi
 
 # 테마 설정
