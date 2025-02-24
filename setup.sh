@@ -3,14 +3,13 @@
 apt update
 
 DISKS=$(lsblk -nd --output NAME | awk '{print $1 " " "/dev/"$1}')
-TARGET_DISK="/dev/$(dialog --title "Disk" --menu "Select disk for installation:" 15 50 5 $DISKS 3>&1 1>&2 2>&3)"
+TARGET_DISK="/dev/$(dialog --ascii-lines --title "Disk" --menu "Select disk for installation:" 15 50 5 $DISKS 3>&1 1>&2 2>&3)"
 clear
 
 if [ -z "$TARGET_DISK" ]; then
     echo "Cancel installation"
     exit 1
 fi
-
 
 TARGET_MOUNT="/mnt"
 UBUNTU_VERSION="noble"  # 22.04 LTS
@@ -121,33 +120,33 @@ netplan apply
 "
 
 while true; do
-    ROOTPASSWORD=$(dialog --title "ROOT Password" --insecure --passwordbox "ROOT Password:" 10 40 3>&1 1>&2 2>&3)
+    ROOTPASSWORD=$(dialog --ascii-lines --title "ROOT Password" --insecure --passwordbox "ROOT Password:" 10 40 3>&1 1>&2 2>&3)
     if [ -z "$ROOTPASSWORD" ]; then
-        dialog --title "Error" --msgbox "Error: Empty root password. Please try again." 6 40
+        dialog --ascii-lines --title "Error" --msgbox "Error: Empty root password. Please try again." 6 40
     else
         break
     fi
 done
 
 while true; do
-    USERNAME=$(dialog --title "Add User" --inputbox "Username:" 10 40 3>&1 1>&2 2>&3)
+    USERNAME=$(dialog --ascii-lines --title "Add User" --inputbox "Username:" 10 40 3>&1 1>&2 2>&3)
     if [ -z "$USERNAME" ]; then
-        dialog --title "Error" --msgbox "Error: Empty username. Please try again." 6 40
+        dialog --ascii-lines --title "Error" --msgbox "Error: Empty username. Please try again." 6 40
     else
         break
     fi
 done
 
 while true; do
-    PASSWORD=$(dialog --title "Password Setting" --insecure --passwordbox "Password:" 10 40 3>&1 1>&2 2>&3)
+    PASSWORD=$(dialog --ascii-lines --title "Password Setting" --insecure --passwordbox "Password:" 10 40 3>&1 1>&2 2>&3)
     if [ -z "$PASSWORD" ]; then
-        dialog --title "Error" --msgbox "Error: Empty password. Please try again." 6 40
+        dialog --ascii-lines --title "Error" --msgbox "Error: Empty password. Please try again." 6 40
     else
         break
     fi
 done
 
-dialog --title "Permission" --yesno "Sudo?" 7 50
+dialog --ascii-lines --title "Permission" --yesno "Sudo?" 7 50
 SUDO_CHOICE=$?
 
 clear
