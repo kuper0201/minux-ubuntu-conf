@@ -78,6 +78,7 @@ apt install -y libterm-readline-gnu-perl systemd-sysv os-prober shim-signed grub
 # fi
 
 apt install -y --no-install-recommends linux-generic
+update-grub
 
 dbus-uuidgen > /etc/machine-id
 ln -fs /etc/machine-id /var/lib/dbus/machine-id
