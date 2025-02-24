@@ -31,8 +31,8 @@ mkfs.ext4 ${TARGET_DISK}2
 
 # 마운트
 mount ${TARGET_DISK}2 ${TARGET_MOUNT}
-#mkdir -p ${TARGET_MOUNT}/boot
-#mount ${TARGET_DISK}1 ${TARGET_MOUNT}/boot
+mkdir -p ${TARGET_MOUNT}/boot/efi
+mount ${TARGET_DISK}1 ${TARGET_MOUNT}/boot/efi
 
 echo "[2/6] debootstrap"
 debootstrap --arch=amd64 ${UBUNTU_VERSION} ${TARGET_MOUNT} ${MIRROR}
@@ -40,7 +40,7 @@ debootstrap --arch=amd64 ${UBUNTU_VERSION} ${TARGET_MOUNT} ${MIRROR}
 echo "[3/6] setting fstab"
 cat <<EOF > ${TARGET_MOUNT}/etc/fstab
 UUID=$(blkid -s UUID -o value ${TARGET_DISK}2) / ext4 defaults 0 1
-UUID=$(blkid -s UUID -o value ${TARGET_DISK}1) /boot vfat defaults 0 1
+UUID=$(blkid -s UUID -o value ${TARGET_DISK}1) /boot/efi vfat defaults 0 1
 EOF
 
 echo "[4/6] install systemd-boot"
@@ -71,11 +71,11 @@ EOF
 
 apt update
 apt install -y libterm-readline-gnu-perl systemd-sysv os-prober shim-signed grub-common grub-gfxpayload-lists grub-pc grub-pc-bin grub2-common grub-efi-amd64-signed
-# if [ -d "/sys/firmware/efi" ]; then
-#     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
-# else
-#     grub-install --target=i386-pc --recheck "$TARGET_DISK"
-# fi
+if [ -d "/sys/firmware/efi" ]; then
+    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
+else
+    grub-install --target=i386-pc --recheck "$TARGET_DISK"
+fi
 
 apt install -y --no-install-recommends linux-generic
 update-grub
