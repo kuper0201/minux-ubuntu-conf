@@ -72,10 +72,10 @@ apt update
 #apt install -y libterm-readline-gnu-perl systemd-sysv linux-image-generic linux-headers-generic systemd-boot
 apt install -y libterm-readline-gnu-perl systemd-sysv linux-headers-generic linux-image-generic os-prober shim-signed
 if [ -d "/sys/firmware/efi" ]; then
-    apt install grub-efi-amd64
+    apt install -y grub-efi-amd64
     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
 else
-    apt install grub-pc
+    apt install -y grub-pc
     grub-install --target=i386-pc --recheck "$TARGET_DISK"
 fi
 
