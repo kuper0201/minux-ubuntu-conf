@@ -70,8 +70,8 @@ deb-src $MIRROR $UBUNTU_VERSION-updates main restricted universe multiverse
 EOF
 
 apt update
-#apt install -y libterm-readline-gnu-perl systemd-sysv linux-image-generic linux-headers-generic systemd-boot
-apt install -y libterm-readline-gnu-perl systemd-sysv linux-headers-generic linux-image-generic os-prober shim-signed
+#apt install -y libterm-readline-gnu-perl systemd-sysv linux-generic systemd-boot
+apt install -y libterm-readline-gnu-perl systemd-sysv linux-generic os-prober shim-signed
 if [ -d "/sys/firmware/efi" ]; then
     apt install -y grub-efi-amd64
     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
