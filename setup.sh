@@ -47,6 +47,9 @@ echo "[4/6] install systemd-boot"
 mount --bind /dev ${TARGET_MOUNT}/dev
 mount --bind /proc ${TARGET_MOUNT}/proc
 mount --bind /sys ${TARGET_MOUNT}/sys
+if [ -d "/sys/firmware/efi" ]; then
+    mount "$TARGET_DISK"1 "${TARGET_MOUNT}/boot/efi"
+fi
 
 # 테마 설정
 cp -r dot_config ${TARGET_MOUNT}/etc/skel/.config
@@ -66,9 +69,18 @@ deb-src $MIRROR $UBUNTU_VERSION-updates main restricted universe multiverse
 EOF
 
 apt update
-apt install -y libterm-readline-gnu-perl systemd-sysv linux-image-generic linux-headers-generic systemd-boot
-update-initramfs -c -k all
-bootctl install
+#apt install -y libterm-readline-gnu-perl systemd-sysv linux-image-generic linux-headers-generic systemd-boot
+apt install -y libterm-readline-gnu-perl systemd-sysv linux-headers-generic linux-image-generic grub-pc grub-efi-amd64 os-prober shim-signed
+if [ -d "/sys/firmware/efi" ]; then
+    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
+else
+    grub-install --target=i386-pc --recheck "$TARGET_DISK"
+fi
+
+update-grub
+
+#update-initramfs -c -k all
+#bootctl install
 
 # 부팅 옵션 설정
 rm -rf /boot/loader
