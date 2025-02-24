@@ -70,41 +70,14 @@ deb-src $MIRROR $UBUNTU_VERSION-updates main restricted universe multiverse
 EOF
 
 apt update
-#apt install -y libterm-readline-gnu-perl systemd-sysv linux-generic systemd-boot
-apt install -y libterm-readline-gnu-perl systemd-sysv linux-generic os-prober shim-signed
-if [ -d "/sys/firmware/efi" ]; then
-    apt install -y grub-efi-amd64
-    grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
-else
-    apt install -y grub-pc
-    grub-install --target=i386-pc --recheck "$TARGET_DISK"
-fi
+apt install -y libterm-readline-gnu-perl systemd-sysv os-prober shim-signed grub-common grub-gfxpayload-lists grub-pc grub-pc-bin grub2-common grub-efi-amd64-signed
+# if [ -d "/sys/firmware/efi" ]; then
+#     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
+# else
+#     grub-install --target=i386-pc --recheck "$TARGET_DISK"
+# fi
 
-update-grub
-
-#update-initramfs -c -k all
-#bootctl install
-
-# 부팅 옵션 설정
-rm -rf /boot/loader
-rm -rf /boot/efi/loader
-
-mv /boot/initrd.img* /boot/initrd.img
-mv /boot/vmlinuz* /boot/vmlinuz
-
-mkdir -p /boot/loader/entries
-cat <<BOOT > /boot/loader/entries/minux.conf
-title Minux(Ubuntu-${UBUNTU_VERSION})
-linux /vmlinuz
-initrd /initrd.img
-options root=UUID=$(blkid -s UUID -o value ${TARGET_DISK}2) rw quiet splash
-BOOT
-
-# 부트로더 기본 설정
-cat <<LOADER > /boot/loader/loader.conf
-default minux.conf
-timeout 3
-LOADER
+apt install -y --no-install-recommends linux-generic
 
 dbus-uuidgen > /etc/machine-id
 ln -fs /etc/machine-id /var/lib/dbus/machine-id
