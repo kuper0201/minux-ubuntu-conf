@@ -40,7 +40,7 @@ debootstrap --arch=amd64 ${UBUNTU_VERSION} ${TARGET_MOUNT} ${MIRROR}
 echo "[3/6] setting fstab"
 cat <<EOF > ${TARGET_MOUNT}/etc/fstab
 UUID=$(blkid -s UUID -o value ${TARGET_DISK}2) / ext4 defaults 0 1
-UUID=$(blkid -s UUID -o value ${TARGET_DISK}1) /boot/efi vfat defaults 0 1
+UUID=$(blkid -s UUID -o value ${TARGET_DISK}1) /boot vfat defaults 0 1
 EOF
 
 echo "[4/6] install systemd-boot"
@@ -48,8 +48,8 @@ mount --bind /dev ${TARGET_MOUNT}/dev
 mount --bind /proc ${TARGET_MOUNT}/proc
 mount --bind /sys ${TARGET_MOUNT}/sys
 if [ -d "/sys/firmware/efi" ]; then
-    mkdir -p ${TARGET_MOUNT}/boot/efi
-    mount "$TARGET_DISK"1 "${TARGET_MOUNT}/boot/efi"
+    mkdir -p ${TARGET_MOUNT}/boot
+    mount "$TARGET_DISK"1 "${TARGET_MOUNT}/boot"
 fi
 
 # 테마 설정
