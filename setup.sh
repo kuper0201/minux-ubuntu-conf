@@ -85,7 +85,7 @@ ln -fs /etc/machine-id /var/lib/dbus/machine-id
 
 # 패키지 설치
 apt install -y --no-install-recommends --no-install-suggests xorg openbox lightdm lightdm-gtk-greeter xfce4-panel git nano alacritty
-apt install -y adwaita-qt adwaita-qt6 gnome-themes-extra
+apt install -y adwaita-qt adwaita-qt6 gnome-themes-extra tar curl
 
 # 환경 변수 설정
 sed -i '$ s/$/\nQT_QPA_PLATFORMTHEME=qt5ct\nQT_STYLE_OVERRIDE=Adwaita-Dark\nGTK_THEME=Adwaita-dark/' /etc/environment
@@ -109,6 +109,12 @@ netplan apply
 
 # NVIDIA driver 설치
 apt install -y nvidia-driver-550
+
+# install micromamba
+curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+chmod +x bin/micromamba
+mv bin/micromamba /usr/local/bin/micromamba
+rm -rf bin
 "
 
 while true; do
