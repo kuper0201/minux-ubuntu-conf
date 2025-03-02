@@ -43,7 +43,7 @@ UUID=$(blkid -s UUID -o value ${TARGET_DISK}2) / ext4 defaults 0 1
 UUID=$(blkid -s UUID -o value ${TARGET_DISK}1) /boot/efi vfat defaults 0 1
 EOF
 
-echo "[4/6] install systemd-boot"
+echo "[4/6] install boot loader"
 mount --bind /dev ${TARGET_MOUNT}/dev
 mount --bind /proc ${TARGET_MOUNT}/proc
 mount --bind /sys ${TARGET_MOUNT}/sys
@@ -70,7 +70,7 @@ deb-src $MIRROR $UBUNTU_VERSION-updates main restricted universe multiverse
 EOF
 
 apt update
-apt install -y libterm-readline-gnu-perl systemd-sysv os-prober shim-signed grub-common grub-gfxpayload-lists grub-pc grub-pc-bin grub2-common grub-efi-amd64-signed
+apt install -y libterm-readline-gnu-perl systemd-sysv os-prober shim-signed grub-common grub-gfxpayload-lists grub-pc grub-pc-bin grub2-common grub-efi-amd64-signed tar curl
 if [ -d "/sys/firmware/efi" ]; then
     grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
 else
@@ -85,7 +85,7 @@ ln -fs /etc/machine-id /var/lib/dbus/machine-id
 
 # 패키지 설치
 apt install -y --no-install-recommends --no-install-suggests xorg openbox lightdm lightdm-gtk-greeter xfce4-panel git nano alacritty
-apt install -y adwaita-qt adwaita-qt6 gnome-themes-extra tar curl
+apt install -y adwaita-qt adwaita-qt6 gnome-themes-extra
 
 # 환경 변수 설정
 sed -i '$ s/$/\nQT_QPA_PLATFORMTHEME=qt5ct\nQT_STYLE_OVERRIDE=Adwaita-Dark\nGTK_THEME=Adwaita-dark/' /etc/environment
