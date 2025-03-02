@@ -106,6 +106,9 @@ network:
 EOF
 
 netplan apply
+
+# NVIDIA driver 설치
+apt install -y nvidia-driver-550
 "
 
 while true; do
