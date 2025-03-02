@@ -57,6 +57,7 @@ fi
 cp -r dot_config ${TARGET_MOUNT}/etc/skel/.config
 cp -r dot_themes ${TARGET_MOUNT}/etc/skel/.themes
 cp -r wallpapers ${TARGET_MOUNT}/usr/share/wallpapers
+cp -r icon_svg ${TARGET_MOUNT}/usr/share/icon_svg
 
 chroot ${TARGET_MOUNT} bash -c "
 cat <<EOF > /etc/apt/sources.list
