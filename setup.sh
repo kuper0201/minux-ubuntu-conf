@@ -47,6 +47,7 @@ echo "[4/6] install boot loader"
 mount --bind /dev ${TARGET_MOUNT}/dev
 mount --bind /proc ${TARGET_MOUNT}/proc
 mount --bind /sys ${TARGET_MOUNT}/sys
+mount --bind /dev/pts ${TARGET_MOUNT}/dev/pts
 if [ -d "/sys/firmware/efi" ]; then
     mkdir -p ${TARGET_MOUNT}/boot/efi
     mount "$TARGET_DISK"1 "${TARGET_MOUNT}/boot/efi"
