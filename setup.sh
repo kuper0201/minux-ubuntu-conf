@@ -170,6 +170,7 @@ echo 'minux' > /etc/hostname
 echo 'root:$ROOTPASSWORD' | chpasswd
 "
 
-echo "[6/6] installation end - reboot"
+echo "[6/6] unmount"
 umount -R ${TARGET_MOUNT}
-echo "Reboot"
+echo "Instalation end."
+echo "Reboot your system!"
