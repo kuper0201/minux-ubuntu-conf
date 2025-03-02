@@ -112,11 +112,13 @@ netplan apply
 apt install -y nvidia-driver-550
 
 # install micromamba
-mkdir micromamba-bin
-curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj micromamba-bin/micromamba
-chmod +x micromamba-bin/micromamba
-mv micromamba-bin/micromamba /usr/local/bin/micromamba
-rm -rf micromamba-bin
+mkdir -p /root/micromamba-bin
+cd /root/micromamba-bin
+curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+chmod +x bin/micromamba
+mv bin/micromamba /usr/local/bin/micromamba
+cd /
+rm -rf /root/micromamba-bin
 "
 
 while true; do
